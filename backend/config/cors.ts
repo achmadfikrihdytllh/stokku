@@ -15,10 +15,11 @@ const corsConfig = defineConfig({
 
   /**
    * In development, allow every origin to simplify local front/backend setup.
-   * In production, keep an explicit allowlist (empty by default, so no
-   * cross-origin browser access is allowed until configured).
+   * In production, keep an explicit allowlist of allowed frontend domains.
    */
-  origin: app.inDev ? true : [],
+  origin: app.inDev
+    ? true
+    : ['https://accomplished-wholeness-production-f46f.up.railway.app'],
 
   /**
    * HTTP methods accepted for cross-origin requests.
