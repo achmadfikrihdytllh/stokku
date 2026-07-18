@@ -69,6 +69,29 @@ export default function Dashboard() {
 
   return (
     <div style={{ fontFamily: 'system-ui, sans-serif' }}>
+      <style>{`
+        .stokku-summary-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 16px;
+          margin-bottom: 32px;
+        }
+        .stokku-chart-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+          gap: 20px;
+        }
+        @media (max-width: 768px) {
+          .stokku-chart-grid {
+            grid-template-columns: 1fr;
+          }
+          .stokku-summary-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+          }
+        }
+      `}</style>
+
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 26, fontWeight: 700, color: '#0f172a', marginBottom: 4 }}>
@@ -97,14 +120,7 @@ export default function Dashboard() {
       )}
 
       {/* Summary Cards */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: 16,
-          marginBottom: 32,
-        }}
-      >
+      <div className="stokku-summary-grid">
         <StatCard
           label="Total Produk"
           value={loading ? '...' : summary?.totalProducts ?? '-'}
@@ -135,13 +151,7 @@ export default function Dashboard() {
       </div>
 
       {/* Charts */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(0, 2fr) minmax(0, 1fr)',
-          gap: 20,
-        }}
-      >
+      <div className="stokku-chart-grid">
         <ChartCard title="Tren Transaksi Stok (7 Hari Terakhir)">
           {loading ? (
             <EmptyState text="Memuat data..." />
