@@ -319,4 +319,28 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dashboard_controller').default['topProducts']>>>
     }
   }
+  'returns.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/returns'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/returns_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/returns_controller').default['index']>>>
+    }
+  }
+  'returns.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/returns'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#validators/return').createReturnValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#validators/return').createReturnValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/returns_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/returns_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
 }

@@ -17,6 +17,8 @@ const ProductsController = () => import('#controllers/products_controller')
 const StocksController = () => import('#controllers/stocks_controller')
 const DashboardController = () => import('#controllers/dashboard_controller')
 const StockMovementsController = () => import('#controllers/stock_movements_controller')
+const ReturnsController = () => import('#controllers/returns_controller')
+
 router.get('/', () => {
   return { hello: 'world' }
 })
@@ -52,6 +54,8 @@ router
         router.get('dashboard/summary', [DashboardController, 'summary'])
         router.get('dashboard/movement-trend', [DashboardController, 'movementTrend'])
         router.get('dashboard/top-products', [DashboardController, 'topProducts'])
+        router.get('returns', [ReturnsController, 'index'])
+        router.post('returns', [ReturnsController, 'store'])
       })
       .use(middleware.auth())
   })

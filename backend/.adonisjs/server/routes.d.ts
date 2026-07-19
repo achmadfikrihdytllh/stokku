@@ -30,6 +30,8 @@ export type ScannedRoutes = {
     'dashboard.summary': { paramsTuple?: []; params?: {} }
     'dashboard.movement_trend': { paramsTuple?: []; params?: {} }
     'dashboard.top_products': { paramsTuple?: []; params?: {} }
+    'returns.index': { paramsTuple?: []; params?: {} }
+    'returns.store': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -44,6 +46,7 @@ export type ScannedRoutes = {
     'dashboard.summary': { paramsTuple?: []; params?: {} }
     'dashboard.movement_trend': { paramsTuple?: []; params?: {} }
     'dashboard.top_products': { paramsTuple?: []; params?: {} }
+    'returns.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'profile.profile.show': { paramsTuple?: []; params?: {} }
@@ -58,6 +61,7 @@ export type ScannedRoutes = {
     'dashboard.summary': { paramsTuple?: []; params?: {} }
     'dashboard.movement_trend': { paramsTuple?: []; params?: {} }
     'dashboard.top_products': { paramsTuple?: []; params?: {} }
+    'returns.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
     'auth.new_account.store': { paramsTuple?: []; params?: {} }
@@ -68,6 +72,7 @@ export type ScannedRoutes = {
     'products.store': { paramsTuple?: []; params?: {} }
     'stock_movements.store': { paramsTuple?: []; params?: {} }
     'stock_movements.transfer': { paramsTuple?: []; params?: {} }
+    'returns.store': { paramsTuple?: []; params?: {} }
   }
   PUT: {
     'warehouses.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

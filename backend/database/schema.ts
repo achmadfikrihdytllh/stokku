@@ -72,6 +72,31 @@ export class ProductSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class ReturnSchema extends BaseModel {
+  static $columns = ['condition', 'createdAt', 'id', 'productId', 'quantity', 'reason', 'type', 'updatedAt', 'userId', 'warehouseId'] as const
+  $columns = ReturnSchema.$columns
+  @column()
+  declare condition: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare productId: number
+  @column()
+  declare quantity: number
+  @column()
+  declare reason: string | null
+  @column()
+  declare type: string
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+  @column()
+  declare userId: number | null
+  @column()
+  declare warehouseId: number
+}
+
 export class StockMovementSchema extends BaseModel {
   static $columns = ['createdAt', 'id', 'productId', 'quantity', 'referenceNote', 'type', 'updatedAt', 'userId', 'warehouseId'] as const
   $columns = StockMovementSchema.$columns

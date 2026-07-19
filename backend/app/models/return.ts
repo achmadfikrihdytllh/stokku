@@ -5,9 +5,12 @@ import Product from '#models/product'
 import Warehouse from '#models/warehouse'
 import User from '#models/user'
 
-export default class StockMovement extends BaseModel {
+export default class Return extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
+
+  @column()
+  declare type: 'customer' | 'supplier'
 
   @column()
   declare productId: number
@@ -15,14 +18,14 @@ export default class StockMovement extends BaseModel {
   @column()
   declare warehouseId: number
 
-@column()
-declare type: 'in' | 'out' | 'transfer_in' | 'transfer_out' | 'return_in' | 'return_in_damaged' | 'return_out'
-
   @column()
   declare quantity: number
 
   @column()
-  declare referenceNote: string | null
+  declare condition: 'good' | 'damaged' | 'defective'
+
+  @column()
+  declare reason: string | null
 
   @column()
   declare userId: number | null

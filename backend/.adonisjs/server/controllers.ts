@@ -6,11 +6,12 @@
 export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
   Categories: () => import('#controllers/categories_controller'),
+  Dashboard: () => import('#controllers/dashboard_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Products: () => import('#controllers/products_controller'),
   Profile: () => import('#controllers/profile_controller'),
+  Returns: () => import('#controllers/returns_controller'),
   StockMovements: () => import('#controllers/stock_movements_controller'),
   Stocks: () => import('#controllers/stocks_controller'),
   Warehouses: () => import('#controllers/warehouses_controller'),
-  Dashboard: () => import('#controllers/dashboard_controller'),
 }

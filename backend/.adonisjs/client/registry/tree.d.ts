@@ -52,4 +52,8 @@ export interface ApiDefinition {
     movementTrend: typeof routes['dashboard.movement_trend']
     topProducts: typeof routes['dashboard.top_products']
   }
+  returns: {
+    index: typeof routes['returns.index']
+    store: typeof routes['returns.store']
+  }
 }

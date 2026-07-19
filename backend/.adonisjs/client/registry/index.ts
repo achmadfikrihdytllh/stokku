@@ -162,6 +162,18 @@ const routes = {
     tokens: [{"old":"/api/v1/dashboard/top-products","type":0,"val":"api","end":""},{"old":"/api/v1/dashboard/top-products","type":0,"val":"v1","end":""},{"old":"/api/v1/dashboard/top-products","type":0,"val":"dashboard","end":""},{"old":"/api/v1/dashboard/top-products","type":0,"val":"top-products","end":""}],
     types: placeholder as Registry['dashboard.top_products']['types'],
   },
+  'returns.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/returns',
+    tokens: [{"old":"/api/v1/returns","type":0,"val":"api","end":""},{"old":"/api/v1/returns","type":0,"val":"v1","end":""},{"old":"/api/v1/returns","type":0,"val":"returns","end":""}],
+    types: placeholder as Registry['returns.index']['types'],
+  },
+  'returns.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/returns',
+    tokens: [{"old":"/api/v1/returns","type":0,"val":"api","end":""},{"old":"/api/v1/returns","type":0,"val":"v1","end":""},{"old":"/api/v1/returns","type":0,"val":"returns","end":""}],
+    types: placeholder as Registry['returns.store']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }
