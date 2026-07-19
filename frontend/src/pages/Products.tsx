@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import api from '../api/axios'
 
 interface Category {
@@ -18,12 +18,22 @@ interface Product {
   minStock: number
 }
 
+interface ImportResult {
+  created: number
+  updated: number
+  errors: { row: number; message: string }[]
+}
+
 export default function Products() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<number | null>(null)
+
+  const [importing, setImporting] = useState(false)
+  const [importResult, setImportResult] = useState<ImportResult | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [form, setForm] = useState({
     sku: '',
@@ -105,14 +115,96 @@ export default function Products() {
     fetchProducts()
   }
 
+  const handleExport = async () => {
+    const res = await api.get('/products/export', { responseType: 'blob' })
+    const url = window.URL.createObjectURL(new Blob([res.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'produk.xlsx')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
+
+  const handleDownloadTemplate = async () => {
+    const res = await api.get('/products/import-template', { responseType: 'blob' })
+    const url = window.URL.createObjectURL(new Blob([res.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'template-import-produk.xlsx')
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setImporting(true)
+    setImportResult(null)
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const res = await api.post('/products/import', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      setImportResult(res.data)
+      fetchProducts()
+    } catch (err: any) {
+      alert(err.response?.data?.message ?? 'Gagal mengimpor file.')
+    } finally {
+      setImporting(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
+  }
+
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
         <h1>Produk</h1>
-        <button onClick={() => { resetForm(); setShowForm(true) }}>
-          + Tambah Produk
-        </button>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <button onClick={handleDownloadTemplate}>Download Template</button>
+          <button onClick={handleImportClick} disabled={importing}>
+            {importing ? 'Mengimpor...' : 'Import Excel'}
+          </button>
+          <button onClick={handleExport}>Export Excel</button>
+          <button onClick={() => { resetForm(); setShowForm(true) }}>+ Tambah Produk</button>
+        </div>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept=".xlsx,.xls"
+          style={{ display: 'none' }}
+        />
       </div>
+
+      {importResult && (
+        <div style={{ background: 'white', padding: 16, borderRadius: 8, marginBottom: 20 }}>
+          <p>
+            ✅ Import selesai: <strong>{importResult.created}</strong> produk baru ditambahkan,{' '}
+            <strong>{importResult.updated}</strong> produk diupdate.
+          </p>
+          {importResult.errors.length > 0 && (
+            <div style={{ marginTop: 8, color: '#dc2626' }}>
+              <p style={{ fontWeight: 600 }}>{importResult.errors.length} baris gagal:</p>
+              <ul>
+                {importResult.errors.map((err, i) => (
+                  <li key={i}>Baris {err.row}: {err.message}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <button onClick={() => setImportResult(null)} style={{ marginTop: 8 }}>Tutup</button>
+        </div>
+      )}
 
       {showForm && (
         <form onSubmit={handleSubmit} style={{ background: 'white', padding: 20, borderRadius: 8, marginBottom: 20 }}>
