@@ -142,6 +142,7 @@ export default function DashboardLayout() {
               style={{
                 background: 'transparent',
                 border: 'none',
+                color: '#0f172a',
                 fontSize: 22,
                 cursor: 'pointer',
                 padding: 4,
