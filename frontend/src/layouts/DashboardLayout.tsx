@@ -9,6 +9,7 @@ const navItems = [
   { to: '/warehouses', label: 'Gudang' },
   { to: '/stocks', label: 'Stok' },
   { to: '/stock-movements', label: 'Transaksi Stok' },
+  { to: '/returns', label: 'Retur' },
 ]
 
 export default function DashboardLayout() {

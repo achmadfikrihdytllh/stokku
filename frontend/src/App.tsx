@@ -8,6 +8,7 @@ import Warehouses from './pages/Warehouses'
 import Categories from './pages/Categories'
 import Stocks from './pages/Stocks'
 import StockMovements from './pages/StockMovements'
+import Returns from './pages/Returns'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { token } = useAuth()
@@ -31,6 +32,7 @@ function AppRoutes() {
         <Route path="/categories" element={<Categories />} />
         <Route path="/stocks" element={<Stocks />} />
         <Route path="/stock-movements" element={<StockMovements />} />
+        <Route path="/returns" element={<Returns />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
