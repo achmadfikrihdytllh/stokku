@@ -41,15 +41,18 @@ router
       .prefix('account')
       .as('profile')
       .use(middleware.auth())
-      
+
     router
       .group(() => {
         router.resource('warehouses', WarehousesController).apiOnly()
         router.resource('categories', CategoriesController).apiOnly()
-        router.resource('products', ProductsController).apiOnly()
+
+
         router.get('products/export', [ProductsController, 'export'])
         router.get('products/import-template', [ProductsController, 'importTemplate'])
         router.post('products/import', [ProductsController, 'import'])
+        router.resource('products', ProductsController).apiOnly()
+
         router.get('stocks', [StocksController, 'index'])
         router.get('stock-movements', [StockMovementsController, 'index'])
         router.post('stock-movements', [StockMovementsController, 'store'])
@@ -63,7 +66,3 @@ router
       .use(middleware.auth())
   })
   .prefix('/api/v1')
-
-
-
-
