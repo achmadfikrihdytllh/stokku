@@ -52,18 +52,22 @@ export default function Stocks() {
   }, [filterWarehouse, filterLowStock])
 
   return (
-    <div>
+    <div style={{ maxWidth: '100%', overflowX: 'hidden' }}>
       <h1 style={{ marginBottom: 20 }}>Stok</h1>
 
-      <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
-        <select value={filterWarehouse} onChange={(e) => setFilterWarehouse(e.target.value)} style={{ padding: 8 }}>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
+        <select
+          value={filterWarehouse}
+          onChange={(e) => setFilterWarehouse(e.target.value)}
+          style={{ padding: 8, flex: '1 1 200px', maxWidth: '100%' }}
+        >
           <option value="">Semua Gudang</option>
           {warehouses.map((w) => (
             <option key={w.id} value={w.id}>{w.name}</option>
           ))}
         </select>
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 6, flex: '1 1 auto', whiteSpace: 'nowrap' }}>
           <input
             type="checkbox"
             checked={filterLowStock}
@@ -76,37 +80,41 @@ export default function Stocks() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'white' }}>
-          <thead>
-            <tr style={{ textAlign: 'left', borderBottom: '2px solid #e2e8f0' }}>
-              <th style={thStyle}>SKU</th>
-              <th style={thStyle}>Produk</th>
-              <th style={thStyle}>Gudang</th>
-              <th style={thStyle}>Jumlah</th>
-              <th style={thStyle}>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stocks.map((s) => {
-              const isLow = s.quantity <= s.product.minStock
-              return (
-                <tr key={s.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                  <td style={tdStyle}>{s.product.sku}</td>
-                  <td style={tdStyle}>{s.product.name}</td>
-                  <td style={tdStyle}>{s.warehouse.name}</td>
-                  <td style={tdStyle}>{s.quantity}</td>
-                  <td style={tdStyle}>
-                    {isLow ? (
-                      <span style={{ color: 'red', fontWeight: 600 }}>Stok Menipis</span>
-                    ) : (
-                      <span style={{ color: 'green' }}>Aman</span>
-                    )}
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        // Wrapper ini yang bikin tabel bisa discroll ke samping di layar kecil,
+        // tanpa mendorong seluruh halaman jadi melebar.
+        <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch', background: 'white', borderRadius: 8 }}>
+          <table style={{ width: '100%', minWidth: 560, borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ textAlign: 'left', borderBottom: '2px solid #e2e8f0' }}>
+                <th style={thStyle}>SKU</th>
+                <th style={thStyle}>Produk</th>
+                <th style={thStyle}>Gudang</th>
+                <th style={thStyle}>Jumlah</th>
+                <th style={thStyle}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stocks.map((s) => {
+                const isLow = s.quantity <= s.product.minStock
+                return (
+                  <tr key={s.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                    <td style={tdStyle}>{s.product.sku}</td>
+                    <td style={tdStyle}>{s.product.name}</td>
+                    <td style={tdStyle}>{s.warehouse.name}</td>
+                    <td style={tdStyle}>{s.quantity}</td>
+                    <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>
+                      {isLow ? (
+                        <span style={{ color: 'red', fontWeight: 600 }}>Stok Menipis</span>
+                      ) : (
+                        <span style={{ color: 'green' }}>Aman</span>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )

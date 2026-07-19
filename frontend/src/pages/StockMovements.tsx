@@ -190,7 +190,7 @@ export default function StockMovements() {
   }
 
   return (
-    <div style={{ fontFamily: 'system-ui, sans-serif' }}>
+    <div style={{ fontFamily: 'system-ui, sans-serif', maxWidth: '100%', overflowX: 'hidden' }}>
       {/* Header */}
       <div
         style={{
@@ -210,11 +210,11 @@ export default function StockMovements() {
             Histori stok masuk, keluar, dan transfer antar gudang.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={() => setShowInOutModal(true)} style={primaryBtn}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <button onClick={() => setShowInOutModal(true)} style={{ ...primaryBtn, flex: '1 1 auto' }}>
             + Stok Masuk/Keluar
           </button>
-          <button onClick={() => setShowTransferModal(true)} style={secondaryBtn}>
+          <button onClick={() => setShowTransferModal(true)} style={{ ...secondaryBtn, flex: '1 1 auto' }}>
             ⇄ Transfer Gudang
           </button>
         </div>
@@ -225,12 +225,12 @@ export default function StockMovements() {
       )}
 
       {/* Filter */}
-      <div style={{ marginBottom: 16, display: 'flex', gap: 10, alignItems: 'center' }}>
+      <div style={{ marginBottom: 16, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
         <label style={{ fontSize: 13, color: '#64748b' }}>Filter tipe:</label>
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
-          style={selectStyle}
+          style={{ ...selectStyle, width: 'auto', minWidth: 160 }}
         >
           <option value="">Semua</option>
           <option value="in">Masuk</option>
@@ -246,10 +246,11 @@ export default function StockMovements() {
           background: 'white',
           borderRadius: 12,
           border: '1px solid #e2e8f0',
-          overflow: 'hidden',
+          overflowX: 'auto',
+          WebkitOverflowScrolling: 'touch',
         }}
       >
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
+        <table style={{ width: '100%', minWidth: 720, borderCollapse: 'collapse', fontSize: 14 }}>
           <thead>
             <tr style={{ background: '#f8fafc', textAlign: 'left' }}>
               <Th>Tanggal</Th>
@@ -277,10 +278,10 @@ export default function StockMovements() {
             ) : (
               movements.map((m) => (
                 <tr key={m.id} style={{ borderTop: '1px solid #f1f5f9' }}>
-                  <Td>{new Date(m.createdAt).toLocaleString('id-ID')}</Td>
+                  <Td nowrap>{new Date(m.createdAt).toLocaleString('id-ID')}</Td>
                   <Td>{m.product?.name ?? '-'}</Td>
                   <Td>{m.warehouse?.name ?? '-'}</Td>
-                  <Td>
+                  <Td nowrap>
                     <span
                       style={{
                         color: typeColor[m.type],
@@ -354,7 +355,7 @@ export default function StockMovements() {
               />
             </Field>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20, flexWrap: 'wrap' }}>
               <button type="button" onClick={() => setShowInOutModal(false)} style={secondaryBtn}>
                 Batal
               </button>
@@ -418,7 +419,7 @@ export default function StockMovements() {
               />
             </Field>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20, flexWrap: 'wrap' }}>
               <button type="button" onClick={() => setShowTransferModal(false)} style={secondaryBtn}>
                 Batal
               </button>
@@ -441,8 +442,12 @@ function Th({ children }: { children: React.ReactNode }) {
   )
 }
 
-function Td({ children }: { children: React.ReactNode }) {
-  return <td style={{ padding: '12px 16px', color: '#1e293b' }}>{children}</td>
+function Td({ children, nowrap }: { children: React.ReactNode; nowrap?: boolean }) {
+  return (
+    <td style={{ padding: '12px 16px', color: '#1e293b', whiteSpace: nowrap ? 'nowrap' : 'normal' }}>
+      {children}
+    </td>
+  )
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
@@ -475,6 +480,8 @@ function Modal({
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 50,
+        padding: 16,
+        boxSizing: 'border-box',
       }}
       onClick={onClose}
     >
@@ -484,9 +491,10 @@ function Modal({
           borderRadius: 12,
           padding: 24,
           width: 420,
-          maxWidth: '90%',
+          maxWidth: '100%',
           maxHeight: '85vh',
           overflowY: 'auto',
+          boxSizing: 'border-box',
         }}
         onClick={(e) => e.stopPropagation()}
       >

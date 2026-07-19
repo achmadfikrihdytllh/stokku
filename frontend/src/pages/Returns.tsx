@@ -95,16 +95,31 @@ export default function Returns() {
   }
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <h1>Retur Barang</h1>
+    <div style={{ maxWidth: '100%', overflowX: 'hidden' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 20,
+          flexWrap: 'wrap',
+          gap: 12,
+        }}
+      >
+        <h1 style={{ margin: 0 }}>Retur Barang</h1>
         <button onClick={() => setShowForm(true)}>+ Catat Retur</button>
       </div>
 
       {showForm && (
         <form onSubmit={handleSubmit} style={{ background: 'white', padding: 20, borderRadius: 8, marginBottom: 20 }}>
           <h3>Catat Retur Baru</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: 12,
+            }}
+          >
             <div>
               <label>Jenis Retur</label>
               <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} style={inputStyle}>
@@ -150,7 +165,7 @@ export default function Returns() {
             </p>
           )}
 
-          <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+          <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <button type="submit">Simpan</button>
             <button type="button" onClick={resetForm}>Batal</button>
           </div>
@@ -160,43 +175,47 @@ export default function Returns() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'white' }}>
-          <thead>
-            <tr style={{ textAlign: 'left', borderBottom: '2px solid #e2e8f0' }}>
-              <th style={thStyle}>Tanggal</th>
-              <th style={thStyle}>Jenis</th>
-              <th style={thStyle}>Produk</th>
-              <th style={thStyle}>Gudang</th>
-              <th style={thStyle}>Jumlah</th>
-              <th style={thStyle}>Kondisi</th>
-              <th style={thStyle}>Alasan</th>
-              <th style={thStyle}>Oleh</th>
-            </tr>
-          </thead>
-          <tbody>
-            {returns.map((r) => (
-              <tr key={r.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                <td style={tdStyle}>{new Date(r.createdAt).toLocaleString('id-ID')}</td>
-                <td style={tdStyle}>{typeLabel(r.type)}</td>
-                <td style={tdStyle}>{r.product.name}</td>
-                <td style={tdStyle}>{r.warehouse.name}</td>
-                <td style={tdStyle}>{r.quantity}</td>
-                <td style={tdStyle}>
-                  <span style={{ color: conditionColor(r.condition), fontWeight: 600 }}>
-                    {conditionLabel(r.condition)}
-                  </span>
-                </td>
-                <td style={tdStyle}>{r.reason ?? '-'}</td>
-                <td style={tdStyle}>{r.user?.fullName ?? r.user?.email ?? '-'}</td>
+        // Wrapper ini yang bikin tabel bisa discroll ke samping di layar kecil,
+        // tanpa mendorong seluruh halaman jadi melebar.
+        <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch', background: 'white', borderRadius: 8 }}>
+          <table style={{ width: '100%', minWidth: 800, borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ textAlign: 'left', borderBottom: '2px solid #e2e8f0' }}>
+                <th style={thStyle}>Tanggal</th>
+                <th style={thStyle}>Jenis</th>
+                <th style={thStyle}>Produk</th>
+                <th style={thStyle}>Gudang</th>
+                <th style={thStyle}>Jumlah</th>
+                <th style={thStyle}>Kondisi</th>
+                <th style={thStyle}>Alasan</th>
+                <th style={thStyle}>Oleh</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {returns.map((r) => (
+                <tr key={r.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                  <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>{new Date(r.createdAt).toLocaleString('id-ID')}</td>
+                  <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>{typeLabel(r.type)}</td>
+                  <td style={tdStyle}>{r.product.name}</td>
+                  <td style={tdStyle}>{r.warehouse.name}</td>
+                  <td style={tdStyle}>{r.quantity}</td>
+                  <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>
+                    <span style={{ color: conditionColor(r.condition), fontWeight: 600 }}>
+                      {conditionLabel(r.condition)}
+                    </span>
+                  </td>
+                  <td style={tdStyle}>{r.reason ?? '-'}</td>
+                  <td style={tdStyle}>{r.user?.fullName ?? r.user?.email ?? '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )
 }
 
-const inputStyle: React.CSSProperties = { width: '100%', padding: 8, marginTop: 4 }
+const inputStyle: React.CSSProperties = { width: '100%', padding: 8, marginTop: 4, boxSizing: 'border-box' }
 const thStyle: React.CSSProperties = { padding: 12 }
 const tdStyle: React.CSSProperties = { padding: 12 }

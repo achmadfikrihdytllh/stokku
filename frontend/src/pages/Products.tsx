@@ -166,16 +166,25 @@ export default function Products() {
   }
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
-        <h1>Produk</h1>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <button onClick={handleDownloadTemplate}>Download Template</button>
-          <button onClick={handleImportClick} disabled={importing}>
+    <div style={{ maxWidth: '100%', overflowX: 'hidden' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 20,
+          flexWrap: 'wrap',
+          gap: 12,
+        }}
+      >
+        <h1 style={{ margin: 0 }}>Produk</h1>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', width: '100%', maxWidth: 480 }}>
+          <button onClick={handleDownloadTemplate} style={btnStyle}>Download Template</button>
+          <button onClick={handleImportClick} disabled={importing} style={btnStyle}>
             {importing ? 'Mengimpor...' : 'Import Excel'}
           </button>
-          <button onClick={handleExport}>Export Excel</button>
-          <button onClick={() => { resetForm(); setShowForm(true) }}>+ Tambah Produk</button>
+          <button onClick={handleExport} style={btnStyle}>Export Excel</button>
+          <button onClick={() => { resetForm(); setShowForm(true) }} style={btnStyle}>+ Tambah Produk</button>
         </div>
         <input
           type="file"
@@ -210,7 +219,13 @@ export default function Products() {
         <form onSubmit={handleSubmit} style={{ background: 'white', padding: 20, borderRadius: 8, marginBottom: 20 }}>
           <h3>{editingId ? 'Edit Produk' : 'Tambah Produk'}</h3>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: 12,
+            }}
+          >
             <div>
               <label>SKU</label>
               <input value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} required style={inputStyle} />
@@ -246,7 +261,7 @@ export default function Products() {
             </div>
           </div>
 
-          <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+          <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <button type="submit">{editingId ? 'Simpan Perubahan' : 'Tambah'}</button>
             <button type="button" onClick={resetForm}>Batal</button>
           </div>
@@ -256,38 +271,43 @@ export default function Products() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'white' }}>
-          <thead>
-            <tr style={{ textAlign: 'left', borderBottom: '2px solid #e2e8f0' }}>
-              <th style={thStyle}>SKU</th>
-              <th style={thStyle}>Nama</th>
-              <th style={thStyle}>Kategori</th>
-              <th style={thStyle}>Harga Jual</th>
-              <th style={thStyle}>Stok Min</th>
-              <th style={thStyle}>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((p) => (
-              <tr key={p.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                <td style={tdStyle}>{p.sku}</td>
-                <td style={tdStyle}>{p.name}</td>
-                <td style={tdStyle}>{p.category?.name ?? '-'}</td>
-                <td style={tdStyle}>Rp {Number(p.sellPrice).toLocaleString('id-ID')}</td>
-                <td style={tdStyle}>{p.minStock}</td>
-                <td style={tdStyle}>
-                  <button onClick={() => handleEdit(p)} style={{ marginRight: 8 }}>Edit</button>
-                  <button onClick={() => handleDelete(p.id)}>Hapus</button>
-                </td>
+        // Wrapper ini yang bikin tabel bisa discroll ke samping di layar kecil,
+        // tanpa mendorong seluruh halaman jadi melebar (overflow-x pada body).
+        <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch', background: 'white', borderRadius: 8 }}>
+          <table style={{ width: '100%', minWidth: 640, borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ textAlign: 'left', borderBottom: '2px solid #e2e8f0' }}>
+                <th style={thStyle}>SKU</th>
+                <th style={thStyle}>Nama</th>
+                <th style={thStyle}>Kategori</th>
+                <th style={thStyle}>Harga Jual</th>
+                <th style={thStyle}>Stok Min</th>
+                <th style={thStyle}>Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {products.map((p) => (
+                <tr key={p.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                  <td style={tdStyle}>{p.sku}</td>
+                  <td style={tdStyle}>{p.name}</td>
+                  <td style={tdStyle}>{p.category?.name ?? '-'}</td>
+                  <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>Rp {Number(p.sellPrice).toLocaleString('id-ID')}</td>
+                  <td style={tdStyle}>{p.minStock}</td>
+                  <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>
+                    <button onClick={() => handleEdit(p)} style={{ marginRight: 8 }}>Edit</button>
+                    <button onClick={() => handleDelete(p.id)}>Hapus</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )
 }
 
-const inputStyle: React.CSSProperties = { width: '100%', padding: 8, marginTop: 4 }
+const inputStyle: React.CSSProperties = { width: '100%', padding: 8, marginTop: 4, boxSizing: 'border-box' }
 const thStyle: React.CSSProperties = { padding: 12 }
 const tdStyle: React.CSSProperties = { padding: 12 }
+const btnStyle: React.CSSProperties = { flex: '1 1 auto', minWidth: 120 }

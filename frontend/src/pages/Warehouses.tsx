@@ -60,9 +60,18 @@ export default function Warehouses() {
   }
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <h1>Gudang</h1>
+    <div style={{ maxWidth: '100%', overflowX: 'hidden' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 20,
+          flexWrap: 'wrap',
+          gap: 12,
+        }}
+      >
+        <h1 style={{ margin: 0 }}>Gudang</h1>
         <button onClick={() => { resetForm(); setShowForm(true) }}>+ Tambah Gudang</button>
       </div>
 
@@ -77,7 +86,7 @@ export default function Warehouses() {
             <label>Alamat</label>
             <input value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} style={inputStyle} />
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <button type="submit">{editingId ? 'Simpan Perubahan' : 'Tambah'}</button>
             <button type="button" onClick={resetForm}>Batal</button>
           </div>
@@ -87,32 +96,36 @@ export default function Warehouses() {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse', background: 'white' }}>
-          <thead>
-            <tr style={{ textAlign: 'left', borderBottom: '2px solid #e2e8f0' }}>
-              <th style={thStyle}>Nama</th>
-              <th style={thStyle}>Alamat</th>
-              <th style={thStyle}>Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {warehouses.map((w) => (
-              <tr key={w.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                <td style={tdStyle}>{w.name}</td>
-                <td style={tdStyle}>{w.address ?? '-'}</td>
-                <td style={tdStyle}>
-                  <button onClick={() => handleEdit(w)} style={{ marginRight: 8 }}>Edit</button>
-                  <button onClick={() => handleDelete(w.id)}>Hapus</button>
-                </td>
+        // Wrapper ini yang bikin tabel bisa discroll ke samping di layar kecil,
+        // tanpa mendorong seluruh halaman jadi melebar.
+        <div style={{ width: '100%', overflowX: 'auto', WebkitOverflowScrolling: 'touch', background: 'white', borderRadius: 8 }}>
+          <table style={{ width: '100%', minWidth: 480, borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ textAlign: 'left', borderBottom: '2px solid #e2e8f0' }}>
+                <th style={thStyle}>Nama</th>
+                <th style={thStyle}>Alamat</th>
+                <th style={thStyle}>Aksi</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {warehouses.map((w) => (
+                <tr key={w.id} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                  <td style={tdStyle}>{w.name}</td>
+                  <td style={tdStyle}>{w.address ?? '-'}</td>
+                  <td style={{ ...tdStyle, whiteSpace: 'nowrap' }}>
+                    <button onClick={() => handleEdit(w)} style={{ marginRight: 8 }}>Edit</button>
+                    <button onClick={() => handleDelete(w.id)}>Hapus</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )
 }
 
-const inputStyle: React.CSSProperties = { width: '100%', padding: 8, marginTop: 4 }
+const inputStyle: React.CSSProperties = { width: '100%', padding: 8, marginTop: 4, boxSizing: 'border-box' }
 const thStyle: React.CSSProperties = { padding: 12 }
 const tdStyle: React.CSSProperties = { padding: 12 }
